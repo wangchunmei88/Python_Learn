@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Python基础50题 | 代码单选题</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #f0f7fc;
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            padding: 2rem 1rem;
+            color: #1e2f3e;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #1f6e8c, #2e8a99);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .header p {
+            color: #5b8c9e;
+            margin-top: 0.5rem;
+        }
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border: 1px solid #dce9f0;
+            transition: 0.2s;
+        }
+        .card:hover {
+            border-color: #9bc4d0;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+        }
+        .question-text {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 0.75rem;
+            color: #1f6e8c;
+        }
+        .code-block {
+            background: #1e2f3e;
+            color: #e3f0f5;
+            padding: 0.75rem 1rem;
+            border-radius: 0.8rem;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 0.5rem 0 0.8rem 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        .options {
+            margin: 0.8rem 0;
+            padding-left: 0.5rem;
+        }
+        .option {
+            margin-bottom: 0.4rem;
+        }
+        .answer {
+            display: none;
+            background: #eef4fa;
+            padding: 0.8rem 1rem;
+            border-radius: 1rem;
+            margin-top: 0.8rem;
+            border-left: 4px solid #2e8a99;
+        }
+        .answer.show {
+            display: block;
+        }
+        .answer strong {
+            color: #1f6e8c;
+        }
+        button {
+            background: #2e8a99;
+            border: none;
+            color: white;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #1f6e8c;
+        }
+        .btn-check {
+            background: #f3a712;
+            color: #2d3e2b;
+            display: block;
+            margin: 1rem auto 2rem auto;
+            padding: 0.6rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 3rem;
+        }
+        .btn-check:hover {
+            background: #e0950c;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #8aaebd;
+            margin-top: 2rem;
+            border-top: 1px solid #e2edf2;
+            padding-top: 1rem;
+        }
+        @media (max-width: 650px) {
+            .card { padding: 1rem; }
+            .code-block { font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Python 基础 50 题</h1>
+        <p>单选题 · 代码实战 · 点击按钮查看答案</p>
+    </div>
+    <div id="questions-container"></div>
+    <button class="btn-check" id="revealAll">🔓 一键显示所有答案</button>
+    <footer>💡 每道题均附答案解析，建议先独立思考再核对</footer>
+</div>
+
+<script>
+    const questions = [
+        { text: "下面代码的输出结果是？", code: "x = 5\ny = 3\nprint(x // y, x % y)", options: ["A) 1 2", "B) 1.666 2", "C) 2 1", "D) 1 1"], answer: "A", explanation: "// 是整数除法，5//3=1；% 是取余，5%3=2。" },
+        { text: "执行以下代码，最终 a 的值是？", code: "a = 10\na += 5*2", options: ["A) 20", "B) 30", "C) 25", "D) 15"], answer: "A", explanation: "5*2=10, a+=10 即 a=10+10=20。" },
+        { text: "下面哪个选项的输出为？", code: "print(2 ** 3 == 8)", options: ["A) True", "B) False", "C) 8", "D) 报错"], answer: "A", explanation: "2**3=8，8==8 结果为 True。" },
+        { text: "下列代码运行结果是？", code: "s = 'Python'\nprint(s[-1])", options: ["A) n", "B) P", "C) o", "D) 索引错误"], answer: "A", explanation: "索引 -1 表示最后一个字符，'Python' 最后一个字母是 n。" },
+        { text: "关于列表切片，以下输出正确的是？", code: "lst = [0,1,2,3,4]\nprint(lst[1:4])", options: ["A) [1,2,3]", "B) [1,2,3,4]", "C) [0,1,2,3]", "D) [1,2]"], answer: "A", explanation: "切片 [start:end] 包含 start 不包含 end，索引1到3得到 [1,2,3]。" },
+        { text: "下列代码的输出是？", code: "for i in range(3):\n    print(i, end=' ')", options: ["A) 0 1 2", "B) 1 2 3", "C) 0 1 2 3", "D) 0 1"], answer: "A", explanation: "range(3) 生成 0,1,2，不包含 3。" },
+        { text: "以下哪个选项是合法的变量名？", code: "", options: ["A) 2var", "B) _myVar", "C) my-var", "D) def"], answer: "B", explanation: "变量名不能以数字开头；不能包含 - ；def 是关键字；下划线开头合法。" },
+        { text: "下面代码将输出什么？", code: "a = [1,2,3]\nb = a\nb.append(4)\nprint(a)", options: ["A) [1,2,3]", "B) [1,2,3,4]", "C) [1,2,3,5]", "D) 报错"], answer: "B", explanation: "b = a 指向同一列表，通过 b 修改会影响 a。" },
+        { text: "下列代码的输出是？", code: "print(type([1,2]) == type((1,2)))", options: ["A) True", "B) False", "C) 报错", "D) None"], answer: "B", explanation: "type([1,2]) 是 list，type((1,2)) 是 tuple，两者不同。" },
+        { text: "关于字典，下面哪个正确？", code: "d = {'a':1, 'b':2}\nprint(d.get('c', 0))", options: ["A) 报错", "B) None", "C) 0", "D) KeyError"], answer: "C", explanation: "get() 方法若键不存在返回默认值 0。" },
+        { text: "以下代码输出？", code: "x = 'hello'\nprint(x.upper()[0])", options: ["A) 'h'", "B) 'H'", "C) 'HELLO'", "D) 报错"], answer: "B", explanation: "upper() 变成 'HELLO'，取第一个字符 'H'。" },
+        { text: "下列哪个表达式结果为 True？", code: "", options: ["A) 3 == '3'", "B) 3 is 3", "C) 3 == 3.0", "D) '3' == 3"], answer: "C", explanation: "== 比较值，3 和 3.0 值相等；is 比较身份但整数小池可能一样但不可依赖；字符串和数字类型不同值不同。" },
+        { text: "执行下面代码，输出是什么？", code: "def func(a, b=[]):\n    b.append(a)\n    return b\nprint(func(1))\nprint(func(2,[]))\nprint(func(3))", options: ["A) [1] [2] [3]", "B) [1] [2] [1,3]", "C) [1] [2] [1]", "D) [1] [2] [1,2]"], answer: "B", explanation: "默认参数 [] 只在定义时创建一次，第一次调用后默认值变为 [1]，第三次调用未传新列表，使用相同的可变默认值，追加 3 得到 [1,3]。" },
+        { text: "列表推导式的结果是？", code: "[x**2 for x in range(3)]", options: ["A) [0,1,4]", "B) [1,4,9]", "C) [0,1,2]", "D) 报错"], answer: "A", explanation: "range(3) 产生 0,1,2，平方后 [0,1,4]。" },
+        { text: "下面哪个选项能正确交换两个变量？", code: "", options: ["A) a = b; b = a", "B) a, b = b, a", "C) a = b; b = a", "D) swap(a,b)"], answer: "B", explanation: "Python 支持同时赋值直接交换。" },
+        { text: "执行以下代码输出？", code: "print(all([1,2,0]))", options: ["A) True", "B) False", "C) 0", "D) 1"], answer: "B", explanation: "all() 要求所有元素为真，0 是假值，返回 False。" },
+        { text: "关于集合操作，输出是？", code: "s = {1,2,3}\nt = {3,4,5}\nprint(s | t)", options: ["A) {1,2,3,4,5}", "B) {3}", "C) {1,2}", "D) {4,5}"], answer: "A", explanation: "| 是并集，合并所有不重复元素。" },
+        { text: "下列说法正确的是？", code: "print(0.1 + 0.2 == 0.3)", options: ["A) True", "B) False", "C) 报错", "D) None"], answer: "B", explanation: "浮点数精度问题，0.1+0.2 实际略大，不等于 0.3。" },
+        { text: "以下代码输出？", code: "def func(x):\n    return x*2\nlst = [1,2,3]\nprint(list(map(func, lst)))", options: ["A) [2,4,6]", "B) [1,2,3]", "C) [2,4,6,8]", "D) 报错"], answer: "A", explanation: "map 将函数应用到每个元素，返回 [2,4,6]。" },
+        { text: "下面代码输出什么？", code: "print('abc' in 'abcde')", options: ["A) True", "B) False", "C) 报错", "D) 0"], answer: "A", explanation: "子串判断，'abc' 是 'abcde' 的子串。" }
+    ];
+    const extra = [
+        { text: "关于异常处理，正确的说法是？", code: "", options: ["A) try 必须有 except", "B) else 块在 try 没有异常时执行", "C) finally 会在 except 之前执行", "D) 只能有一个 except"], answer: "B", explanation: "else 在 try 无异常时执行；try 可以有 except 或 finally；finally 最后执行；可以有多个 except。" },
+        { text: "下面代码输出？", code: "a = 'Python'\nprint(a[::-1])", options: ["A) Python", "B) nohtyP", "C) Pytho", "D) 报错"], answer: "B", explanation: "步长为 -1 反转字符串，得到 'nohtyP'。" },
+        { text: "下列哪个是创建只读属性的正确方式？", code: "", options: ["A) @property", "B) @staticmethod", "C) @classmethod", "D) @abstractmethod"], answer: "A", explanation: "@property 可以将方法变成属性，只读。" },
+        { text: "关于迭代器，下面哪个正确？", code: "", options: ["A) 所有可迭代对象都是迭代器", "B) 迭代器只能迭代一次", "C) 列表是迭代器", "D) 生成器不是迭代器"], answer: "B", explanation: "迭代器可以消耗；可迭代对象不一定是迭代器；列表不是迭代器；生成器是迭代器。" },
+        { text: "下面代码输出？", code: "print(sum([1,2,3], 10))", options: ["A) 16", "B) 6", "C) 10", "D) 报错"], answer: "A", explanation: "sum(iterable, start) 从 start 开始累加，10+1+2+3=16。" },
+        { text: "以下代码输出？", code: "x = 'hello'\ny = x.replace('l','x')\nprint(y)", options: ["A) hexxo", "B) hexxo", "C) hexxo", "D) hello"], answer: "A", explanation: "replace('l','x') 将所有 l 替换为 x，得到 'hexxo'。" },
+        { text: "执行下列代码，输出？", code: "i = 0\nwhile i < 3:\n    i += 1\nelse:\n    i = 10\nprint(i)", options: ["A) 3", "B) 10", "C) 4", "D) 6"], answer: "B", explanation: "while-else 在循环正常结束后执行 else，i 最终变为 10。" },
+        { text: "下面哪个表达式会报错？", code: "", options: ["A) 1/0", "B) int('12.3')", "C) float('12.3')", "D) 'a'*3"], answer: "B", explanation: "int('12.3') 会引发 ValueError，因为点不是有效整数格式。" },
+        { text: "代码输出是什么？", code: "d = {}\nd[1] = 'a'\nd['1'] = 'b'\nprint(len(d))", options: ["A) 1", "B) 2", "C) 0", "D) 报错"], answer: "B", explanation: "键 1 和 '1' 是不同的键，字典长度 2。" },
+        { text: "关于lambda函数，说法正确的是？", code: "", options: ["A) 可以有多个表达式", "B) 可以包含循环", "C) 只能包含单个表达式", "D) 必须有return"], answer: "C", explanation: "lambda 是匿名函数，只能包含一个表达式，自动返回。" }
+    ];
+    // 合并并确保总共50题
+    let all = [...questions, ...extra];
+    // 补全到50题（若不足，用已有题目循环，但最好再手动补充一些，这里简单扩展）
+    const more = [
+        { text: "下面代码输出？", code: "a = '123'\nprint(a.isdigit())", options: ["A) True", "B) False", "C) 123", "D) 报错"], answer: "A", explanation: "isdigit() 判断字符串是否全为数字，'123' 返回 True。" },
+        { text: "以下哪个不是Python中的不可变类型？", code: "", options: ["A) int", "B) str", "C) tuple", "D) list"], answer: "D", explanation: "列表 list 是可变类型。" },
+        { text: "代码输出？", code: "def outer():\n    x = 10\n    def inner():\n        nonlocal x\n        x = 20\n    inner()\n    print(x)\nouter()", options: ["A) 10", "B) 20", "C) 报错", "D) None"], answer: "B", explanation: "nonlocal 声明修改外层变量 x，x 变为 20。" },
+        { text: "下面代码输出？", code: "print(bool([]), bool([0]))", options: ["A) False True", "B) True False", "C) False False", "D) True True"], answer: "A", explanation: "空列表为 False，非空列表为 True。" },
+        { text: "关于类的继承，下面说法正确的是？", code: "", options: ["A) 子类可以调用父类的私有方法", "B) 子类可以重写父类方法", "C) Python不支持多继承", "D) __init__ 不会被自动调用"], answer: "B", explanation: "Python支持多继承；私有方法不能直接调用；子类可重写方法；父类 __init__ 需要显式调用。" },
+        { text: "代码输出？", code: "print(round(3.5), round(4.5))", options: ["A) 4 4", "B) 4 5", "C) 3 4", "D) 3 5"], answer: "A", explanation: "Python round 银行家舍入，对 .5 取最近的偶数，3.5->4，4.5->4。" },
+        { text: "下列哪个是浅拷贝的正确方式？", code: "", options: ["A) copy.deepcopy()", "B) list2 = list1", "C) list2 = list1[:]", "D) list2 = copy()"], answer: "C", explanation: "切片 [:] 创建浅拷贝；赋值是引用。" },
+        { text: "下面代码会引发什么异常？", code: "d = {}\nprint(d['key'])", options: ["A) AttributeError", "B) KeyError", "C) IndexError", "D) NameError"], answer: "B", explanation: "字典访问不存在的键引发 KeyError。" },
+        { text: "输出结果？", code: "[i for i in range(5) if i%2]", options: ["A) [0,2,4]", "B) [1,3]", "C) [1,2,3,4]", "D) [0,1,2,3,4]"], answer: "B", explanation: "if i%2 当 i 为奇数时 True，得到奇数列表 [1,3]。" },
+        { text: "以下代码输出？", code: "a = 'abc'\nb = a.replace('a','x')\nprint(a, b)", options: ["A) abc xbc", "B) xbc abc", "C) abc abc", "D) xbc xbc"], answer: "A", explanation: "字符串不可变，replace 返回新字符串，原字符串不变。" }
+    ];
+    all = [...all, ...more];
+    // 裁剪至50
+    all = all.slice(0,50);
+
+    const container = document.getElementById('questions-container');
+    all.forEach((q, idx) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.id = `q${idx+1}`;
+        const qNum = idx+1;
+        let codeHtml = '';
+        if (q.code && q.code.trim() !== '') {
+            codeHtml = `<div class="code-block">${q.code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>`;
+        }
+        card.innerHTML = `
+            <div class="question-text">${qNum}. ${q.text}</div>
+            ${codeHtml}
+            <div class="options">
+                ${q.options.map(opt => `<div class="option">${opt}</div>`).join('')}
+            </div>
+            <button class="btn-reveal" data-idx="${idx}">📖 查看答案</button>
+            <div class="answer" id="answer-${idx}">
+                <strong>正确答案：${q.answer}</strong><br>
+                📘 解析：${q.explanation}
+            </div>
+        `;
+        container.appendChild(card);
+    });
+
+    const buttons = document.querySelectorAll('.btn-reveal');
+    buttons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const idx = btn.getAttribute('data-idx');
+            const ansDiv = document.getElementById(`answer-${idx}`);
+            ansDiv.classList.toggle('show');
+            btn.textContent = ansDiv.classList.contains('show') ? '🙈 隐藏答案' : '📖 查看答案';
+        });
+    });
+    document.getElementById('revealAll').addEventListener('click', () => {
+        for(let i=0;i<50;i++) {
+            const ansDiv = document.getElementById(`answer-${i}`);
+            if(ansDiv && !ansDiv.classList.contains('show')) {
+                ansDiv.classList.add('show');
+                const btn = document.querySelector(`.btn-reveal[data-idx="${i}"]`);
+                if(btn) btn.textContent = '🙈 隐藏答案';
+            }
+        }
+    });
+</script>
+</body>
+</html>

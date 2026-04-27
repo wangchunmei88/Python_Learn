@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>一文弄懂Python数据结构 | 面试必备</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #f0f5fa;
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, Roboto, sans-serif;
+            padding: 2rem 1rem;
+            color: #1e2f3e;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #1f6e8c, #2e8a99);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .sub {
+            color: #527a7a;
+            border-bottom: 2px solid #c7e3e8;
+            display: inline-block;
+            padding-bottom: 0.3rem;
+        }
+        .card {
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1.5rem 1.8rem;
+            margin-bottom: 1.8rem;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.03);
+            border: 1px solid #dbeef2;
+            transition: 0.2s;
+        }
+        .card:hover {
+            border-color: #b9d4dc;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        h2 {
+            font-size: 1.6rem;
+            margin-bottom: 0.8rem;
+            color: #1f6e8c;
+            border-left: 5px solid #2e8a99;
+            padding-left: 0.8rem;
+        }
+        h3 {
+            font-size: 1.2rem;
+            margin: 1rem 0 0.5rem 0;
+            color: #2c6e6e;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+            margin: 1rem 0;
+        }
+        .info-box {
+            background: #eef4fa;
+            border-radius: 1.2rem;
+            padding: 1rem;
+            border-left: 4px solid #2e8a99;
+        }
+        .code-block {
+            background: #1e2f3e;
+            color: #e3f0f5;
+            padding: 0.8rem 1rem;
+            border-radius: 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 0.8rem 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        th {
+            background: #d4e7ed;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0edf2;
+            font-size: 0.88rem;
+            vertical-align: top;
+        }
+        .highlight {
+            background: #fef5e3;
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .badge {
+            background: #d4e7ed;
+            color: #1f6e8c;
+            border-radius: 40px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #7a9ba8;
+            margin-top: 2rem;
+            border-top: 1px solid #cde3ea;
+            padding-top: 1rem;
+        }
+        @media (max-width: 650px) {
+            .card { padding: 1.2rem; }
+            h2 { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🐍 一文弄懂 Python 数据结构</h1>
+        <div class="sub">列表 · 元组 · 字典 · 集合 · 彻底分清</div>
+    </div>
+
+    <!-- 概览卡片 -->
+    <div class="card">
+        <h2>📦 Python 内置数据结构全家福</h2>
+        <div class="grid-2">
+            <div class="info-box">
+                <strong>🔹 序列类型</strong><br>
+                列表 (list)、元组 (tuple)、字符串 (str)、range
+            </div>
+            <div class="info-box">
+                <strong>🔸 映射类型</strong><br>
+                字典 (dict)
+            </div>
+            <div class="info-box">
+                <strong>🔹 集合类型</strong><br>
+                集合 (set)、冻结集合 (frozenset)
+            </div>
+            <div class="info-box">
+                <strong>🔸 其他</strong><br>
+                数组(array)、队列(deque) 等（来自 collections 模块）
+            </div>
+        </div>
+        <p style="margin-top: 0.5rem;">本文重点讲最常用：<strong class="highlight">list, tuple, dict, set</strong>，搞懂它们，80%的场景够用了。</p>
+    </div>
+
+    <!-- 1. 列表 list -->
+    <div class="card">
+        <h2>📋 列表 (list) —— 有序、可变、随便装</h2>
+        <p><strong>特点</strong>：<span class="highlight">有序</span>、<span class="highlight">可变</span>（可增删改）、<span class="highlight">元素可重复</span>、可混合类型。</p>
+        <div class="code-block">
+            # 创建列表<br>
+            fruits = ['apple', 'banana', 'orange']<br>
+            mixed = [1, 'hello', 3.14, True]<br><br>
+            # 常用操作<br>
+            fruits.append('grape')      # 末尾添加<br>
+            fruits.insert(1, 'pear')    # 指定位置插入<br>
+            fruits.remove('banana')     # 删除元素<br>
+            last = fruits.pop()         # 弹出末尾元素<br>
+            print(fruits[0])            # 索引访问 O(1)
+        </div>
+        <div class="grid-2" style="margin-top: 0.5rem;">
+            <div>✅ 适合：需要频繁增删、顺序遍历、修改元素</div>
+            <div>❌ 缺点：查找元素（in）和中间插入删除较慢（O(n)）</div>
+        </div>
+        <div class="info-box" style="margin-top: 0.5rem;">
+            💡 常用方法：<code>append()</code>, <code>extend()</code>, <code>insert()</code>, <code>pop()</code>, <code>remove()</code>, <code>sort()</code>, <code>reverse()</code>
+        </div>
+    </div>
+
+    <!-- 2. 元组 tuple -->
+    <div class="card">
+        <h2>🔒 元组 (tuple) —— 不可变的“列表”</h2>
+        <p><strong>特点</strong>：<span class="highlight">有序</span>、<span class="highlight">不可变</span>（创建后不能增删改）、元素可重复。</p>
+        <div class="code-block">
+            # 创建元组<br>
+            t = (1, 2, 3)<br>
+            single = (5,)           # 只有一个元素时逗号不能省<br>
+            empty = ()<br><br>
+            # 访问与列表一样<br>
+            print(t[0])             # 1<br>
+            # t[0] = 10            # 报错！不可修改
+        </div>
+        <div class="grid-2">
+            <div>✅ 优点：<strong>不可变 → 可哈希 → 可作为字典的键</strong>，且比列表省内存。</div>
+            <div>✅ 适合：坐标点、数据库一行记录、常量配置、函数返回多个值。</div>
+        </div>
+        <div class="info-box">
+            🔍 解包技巧：<code>a, b, c = (1,2,3)</code> 或 <code>a, *rest = (1,2,3,4)</code>
+        </div>
+    </div>
+
+    <!-- 3. 字典 dict -->
+    <div class="card">
+        <h2>📖 字典 (dict) —— 超快速的“键值对”</h2>
+        <p><strong>特点</strong>：<span class="highlight">键值对存储</span>，键必须不可变（字符串、数字、元组），值可以是任意类型。<strong>无序</strong>（Python 3.7+ 保留插入顺序，但面试常说无序）。</p>
+        <div class="code-block">
+            # 创建字典<br>
+            person = {'name': 'Alice', 'age': 25, 'city': 'Shanghai'}<br>
+            # 或者 dict(name='Alice', age=25)<br><br>
+            # 增改<br>
+            person['job'] = 'Engineer'    # 新增<br>
+            person['age'] = 26            # 修改<br><br>
+            # 删除<br>
+            del person['city']<br>
+            age = person.pop('age')<br><br>
+            # 遍历<br>
+            for k, v in person.items():<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;print(k, v)
+        </div>
+        <div class="grid-2">
+            <div>✅ 查找/插入/删除平均 O(1)，极快！</div>
+            <div>✅ 适合：缓存、配置映射、计数器、数据记录快速查询。</div>
+        </div>
+        <div class="info-box">
+            ⚠️ 注意：字典的键必须是不可变类型。列表不能当键，但元组可以（如果元组内元素也是不可变）。
+        </div>
+    </div>
+
+    <!-- 4. 集合 set -->
+    <div class="card">
+        <h2>🌀 集合 (set) —— 去重 + 集合运算</h2>
+        <p><strong>特点</strong>：<span class="highlight">无序、元素唯一、可变</span>。元素必须是可哈希的（类似字典的键）。</p>
+        <div class="code-block">
+            # 创建集合<br>
+            s = {1, 2, 3, 3, 2}      # 自动去重 → {1,2,3}<br>
+            empty_set = set()         # 注意 {} 是空字典<br>
+            # 从列表去重<br>
+            lst = [1,2,2,3,4,4]<br>
+            unique = set(lst)         # {1,2,3,4}<br><br>
+            # 集合运算<br>
+            a = {1,2,3}<br>
+            b = {3,4,5}<br>
+            print(a | b)    # 并集 {1,2,3,4,5}<br>
+            print(a & b)    # 交集 {3}<br>
+            print(a - b)    # 差集 {1,2}
+        </div>
+        <div class="grid-2">
+            <div>✅ 适合：去重、成员关系测试（in 很快）、数学集合运算。</div>
+            <div>⚠️ 没有顺序，不能通过下标访问。</div>
+        </div>
+        <div class="info-box">
+            💡 冻结集合 <code>frozenset</code>：不可变版本的集合，可以作为字典的键。
+        </div>
+    </div>
+
+    <!-- 核心对比表 -->
+    <div class="card">
+        <h2>⚖️ 一张表看懂区别</h2>
+        <table>
+            <thead><tr><th>特性</th><th>list</th><th>tuple</th><th>dict</th><th>set</th></tr></thead>
+            <tbody>
+                <tr><td>有序性</td><td>✅ 有序</td><td>✅ 有序</td><td>3.7+ 插入顺序</td><td>❌ 无序</td></tr>
+                <tr><td>可变性</td><td>✅ 可变</td><td>❌ 不可变</td><td>✅ 可变</td><td>✅ 可变</td></tr>
+                <tr><td>元素重复</td><td>允许</td><td>允许</td><td>键唯一，值可重复</td><td>元素唯一</td></tr>
+                <tr><td>索引/下标</td><td>✅</td><td>✅</td><td>✅ 通过键</td><td>❌</td></tr>
+                <tr><td>底层实现</td><td>动态数组</td><td>静态数组</td><td>哈希表</td><td>哈希表</td></tr>
+                <tr><td>常用场景</td><td>顺序存储、动态增删</td><td>不可变数据、字典键</td><td>键值映射、快速查找</td><td>去重、集合运算</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 常见面试问题 -->
+    <div class="card">
+        <h2>🎤 面试高频问题 & 回答思路</h2>
+        
+        <div class="info-box" style="margin-bottom: 0.8rem;">
+            <strong>1. 列表和元组的区别？</strong><br>
+            答：列表可变，元组不可变；列表占用内存稍大，速度稍慢；元组可作字典的键，列表不行。另外元组比列表更轻量。
+        </div>
+        <div class="info-box" style="margin-bottom: 0.8rem;">
+            <strong>2. 字典底层怎么实现的？为什么查找快？</strong><br>
+            答：哈希表。通过哈希函数计算键的位置，冲突用开放寻址或链地址法解决。平均 O(1)，最坏 O(n)（但很少发生）。
+        </div>
+        <div class="info-box" style="margin-bottom: 0.8rem;">
+            <strong>3. 集合和列表的去重哪个快？</strong><br>
+            答：集合去重快（O(n)），因为底层哈希表；列表手动去重（if not in）是 O(n²)。大规模数据用 set(list)。
+        </div>
+        <div class="info-box" style="margin-bottom: 0.8rem;">
+            <strong>4. 元组真的完全不可变吗？</strong><br>
+            答：如果元组里包含可变对象（如列表），元组本身不可变（不能替换元素），但可以修改列表内部内容。例如 <code>t = ([1,2], 3)</code> 可以 <code>t[0].append(4)</code>。
+        </div>
+    </div>
+
+    <!-- 实用技巧 -->
+    <div class="card">
+        <h2>💡 开发实用小技巧</h2>
+        <div class="grid-2">
+            <div class="info-box">
+                <strong>🔹 列表推导式</strong><br>
+                <code>[x*2 for x in range(10) if x%2==0]</code>
+            </div>
+            <div class="info-box">
+                <strong>🔸 字典推导式</strong><br>
+                <code>{k: v for k,v in zip(keys, values)}</code>
+            </div>
+            <div class="info-box">
+                <strong>🔹 集合推导式</strong><br>
+                <code>{x for x in 'abracadabra'}</code> → 去重字母
+            </div>
+            <div class="info-box">
+                <strong>🔸 统计元素频率</strong><br>
+                <code>from collections import Counter</code><br>
+                <code>Counter([1,2,2,3])</code>
+            </div>
+        </div>
+        <div class="code-block" style="margin-top: 0.8rem;">
+            # 合并两个字典 (Python 3.9+):<br>
+            dict1 = {'a':1}; dict2 = {'b':2}<br>
+            merged = dict1 | dict2   # {'a':1, 'b':2}
+        </div>
+    </div>
+
+    <!-- 内存与性能提醒 -->
+    <div class="card">
+        <h2>⚡ 性能小贴士</h2>
+        <ul style="margin-left: 1.5rem; line-height: 1.6;">
+            <li>查找元素：<strong>字典/集合 > 列表/元组</strong>（列表需遍历）</li>
+            <li>频繁插入/删除末尾：列表快；中间插入删除：链表快（但Python标准库无内置链表，可用 <code>collections.deque</code>）。</li>
+            <li>去重：用 <code>set(list)</code>，不要手动写循环。</li>
+            <li>判断存在：<code>if x in set/dict</code> 极快；<code>if x in list</code> 慢。</li>
+        </ul>
+    </div>
+
+    <footer>
+        🐍 掌握 Python 数据结构，代码更优雅，面试更从容。记得实践！
+    </footer>
+</div>
+</body>
+</html>

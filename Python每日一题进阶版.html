@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Python进阶50题 | 代码单选题51-100</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #f0f7fc;
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            padding: 2rem 1rem;
+            color: #1e2f3e;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #1f6e8c, #2e8a99);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .header p {
+            color: #5b8c9e;
+            margin-top: 0.5rem;
+        }
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border: 1px solid #dce9f0;
+            transition: 0.2s;
+        }
+        .card:hover {
+            border-color: #9bc4d0;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+        }
+        .question-text {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 0.75rem;
+            color: #1f6e8c;
+        }
+        .code-block {
+            background: #1e2f3e;
+            color: #e3f0f5;
+            padding: 0.75rem 1rem;
+            border-radius: 0.8rem;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 0.5rem 0 0.8rem 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        .options {
+            margin: 0.8rem 0;
+            padding-left: 0.5rem;
+        }
+        .option {
+            margin-bottom: 0.4rem;
+        }
+        .answer {
+            display: none;
+            background: #eef4fa;
+            padding: 0.8rem 1rem;
+            border-radius: 1rem;
+            margin-top: 0.8rem;
+            border-left: 4px solid #2e8a99;
+        }
+        .answer.show {
+            display: block;
+        }
+        .answer strong {
+            color: #1f6e8c;
+        }
+        button {
+            background: #2e8a99;
+            border: none;
+            color: white;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #1f6e8c;
+        }
+        .btn-check {
+            background: #f3a712;
+            color: #2d3e2b;
+            display: block;
+            margin: 1rem auto 2rem auto;
+            padding: 0.6rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 3rem;
+        }
+        .btn-check:hover {
+            background: #e0950c;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #8aaebd;
+            margin-top: 2rem;
+            border-top: 1px solid #e2edf2;
+            padding-top: 1rem;
+        }
+        @media (max-width: 650px) {
+            .card { padding: 1rem; }
+            .code-block { font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Python 进阶 50 题</h1>
+        <p>序号 51-100 · 装饰器/生成器/并发/元类等 · 点击按钮查看答案</p>
+    </div>
+    <div id="questions-container"></div>
+    <button class="btn-check" id="revealAll">🔓 一键显示所有答案</button>
+    <footer>💡 每道题均附答案解析，建议先独立思考再核对</footer>
+</div>
+
+<script>
+    const questions = [
+        { text: "关于装饰器，以下说法正确的是？", code: "", options: ["A) 装饰器本质是函数，接收函数返回函数", "B) 装饰器只能作用于函数，不能作用于类", "C) 带参数的装饰器必须返回三层嵌套函数", "D) 装饰器在函数定义时执行，而不是调用时"], answer: "A", explanation: "装饰器本质是可调用对象，接收函数并返回新函数。可以作用于类方法，带参数的装饰器通常返回二层嵌套（外层接收参数，内层接收函数）。装饰器在定义时执行（编译时）。" },
+        { text: "下面代码输出什么？", code: "def deco(func):\n    print('deco run')\n    return func\n@deco\ndef test():\n    print('test call')\ntest()", options: ["A) deco run\\ntest call", "B) test call", "C) deco run", "D) 报错"], answer: "A", explanation: "装饰器在函数定义时立即执行，打印 'deco run'；调用 test() 时执行函数体。" },
+        { text: "关于生成器，说法错误的是？", code: "", options: ["A) 生成器函数使用 yield 返回值", "B) 生成器只能迭代一次", "C) 生成器可以接收 send() 发送的值", "D) 生成器是迭代器，但迭代器不一定是生成器"], answer: "B", explanation: "生成器可以迭代多次（每次重新创建生成器对象），但同一个生成器对象只能迭代一次。" },
+        { text: "以下代码输出？", code: "def gen():\n    yield 1\n    yield 2\ng = gen()\nprint(next(g))\nprint(next(g))", options: ["A) 1\\n2", "B) 1", "C) 2", "D) 报错"], answer: "A", explanation: "每次调用 next() 执行到下一个 yield。" },
+        { text: "关于上下文管理器，正确是？", code: "", options: ["A) 实现 __enter__ 和 __exit__ 方法即可", "B) 只能通过 with 语句使用", "C) contextlib.contextmanager 装饰器用于简化", "D) 以上都对"], answer: "D", explanation: "实现 __enter__/__exit__ 或使用 contextmanager 装饰器，搭配 with 语句使用。" },
+        { text: "下面代码输出？", code: "class Ctx:\n    def __enter__(self):\n        print('enter')\n        return self\n    def __exit__(self, *args):\n        print('exit')\nwith Ctx() as c:\n    print('inside')", options: ["A) enter\\ninside\\nexit", "B) inside\\nenter\\nexit", "C) enter\\nexit\\ninside", "D) 报错"], answer: "A", explanation: "with 进入时调用 __enter__，执行代码块，退出时调用 __exit__。" },
+        { text: "关于多线程，GIL 的说法正确的是？", code: "", options: ["A) GIL 确保 Python 线程安全", "B) GIL 使得 CPU 密集型任务多线程无法利用多核", "C) GIL 只在 CPython 中存在", "D) 以上都对"], answer: "D", explanation: "GIL 是 CPython 的全局锁，防止多个线程同时执行 Python 字节码，导致 CPU 密集型任务多线程效率低。但 I/O 密集型任务仍然有效。" },
+        { text: "下面代码输出什么？", code: "from threading import Thread\ndef f():\n    print('ok')\nt = Thread(target=f)\nt.start()", options: ["A) ok", "B) 无输出", "C) 报错", "D) 线程无法启动"], answer: "A", explanation: "线程正常启动并执行函数，输出 'ok'。" },
+        { text: "关于 multiprocessing 和 threading，说法正确的是？", code: "", options: ["A) multiprocessing 用于进程，threading 用于线程", "B) 多进程可以利用多核 CPU", "C) 多线程更轻量，但受 GIL 限制", "D) 以上都对"], answer: "D", explanation: "进程有独立内存空间，可以绕过 GIL 利用多核；线程更轻量但受 GIL 限制。" },
+        { text: "下面代码输出什么？", code: "from concurrent.futures import ThreadPoolExecutor\ndef func():\n    return 1+1\nwith ThreadPoolExecutor() as ex:\n    f = ex.submit(func)\n    print(f.result())", options: ["A) 2", "B) None", "C) 报错", "D) <Future>"], answer: "A", explanation: "submit 返回 Future 对象，调用 result() 阻塞获取结果。" },
+        { text: "关于 asyncio，说法错误的是？", code: "", options: ["A) asyncio 使用 async/await 语法", "B) asyncio 是协程，比线程更轻量", "C) asyncio 可以充分利用多核 CPU", "D) asyncio 适合 I/O 密集型任务"], answer: "C", explanation: "asyncio 是单线程事件循环，不能利用多核（需搭配多进程）。" },
+        { text: "下面代码输出？", code: "import asyncio\nasync def main():\n    print('start')\n    await asyncio.sleep(0)\n    print('end')\nasyncio.run(main())", options: ["A) start\\nend", "B) end\\nstart", "C) start", "D) 报错"], answer: "A", explanation: "async 函数内 await 挂起事件循环，sleep(0) 让出控制权，但很快恢复。" },
+        { text: "关于元类，正确的是？", code: "", options: ["A) 元类是类的类，type 是内置元类", "B) 使用 metaclass 关键字指定元类", "C) 元类可以控制类的创建过程", "D) 以上都对"], answer: "D", explanation: "元类用于创建类，可以拦截类定义，常见的 __new__ 和 __init__ 在元类中重写。" },
+        { text: "下面代码输出？", code: "class Meta(type):\n    def __new__(cls, name, bases, dct):\n        dct['x'] = 10\n        return super().__new__(cls, name, bases, dct)\nclass A(metaclass=Meta):\n    pass\nprint(A.x)", options: ["A) 10", "B) 报错", "C) None", "D) 0"], answer: "A", explanation: "元类在创建类时向字典中添加属性 x。" },
+        { text: "关于 __slots__ 的说法正确的是？", code: "", options: ["A) __slots__ 可以限制实例属性", "B) __slots__ 能减少内存占用", "C) __slots__ 会阻止 __dict__ 的创建", "D) 以上都对"], answer: "D", explanation: "__slots__ 声明允许的属性，避免每个实例拥有 __dict__，从而节省内存。" },
+        { text: "下面代码输出？", code: "class A:\n    __slots__ = ('x',)\n    def __init__(self):\n        self.x = 1\n        self.y = 2\na = A()", options: ["A) 正常", "B) AttributeError: 'A' object has no attribute 'y'", "C) TypeError", "D) NameError"], answer: "B", explanation: "__slots__ 限制了实例属性，不能添加未声明的属性 y。" },
+        { text: "关于闭包，下列说法正确的是？", code: "", options: ["A) 闭包必须返回函数", "B) 闭包可以访问外部函数的局部变量", "C) 闭包中修改外部变量需要使用 nonlocal", "D) 以上都对"], answer: "D", explanation: "闭包是指引用了外部函数变量的内部函数，修改外部变量需要 nonlocal 声明。" },
+        { text: "下面代码输出？", code: "def outer(x):\n    def inner(y):\n        return x+y\n    return inner\nf = outer(5)\nprint(f(3))", options: ["A) 8", "B) 5", "C) 3", "D) 报错"], answer: "A", explanation: "闭包捕获了 x=5，inner 返回 5+3=8。" },
+        { text: "关于 functools.wraps 的作用是？", code: "", options: ["A) 保留被装饰函数的元信息", "B) 将原函数的属性复制到包装函数", "C) 避免装饰器导致函数签名丢失", "D) 以上都对"], answer: "D", explanation: "wraps 用于修正装饰器，使装饰后的函数保留原名称、文档等。" },
+        { text: "下面代码输出？", code: "from functools import wraps\ndef deco(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        return func(*args, **kwargs)\n    return wrapper\n@deco\ndef test():\n    'doc'\nprint(test.__name__)", options: ["A) test", "B) wrapper", "C) deco", "D) None"], answer: "A", explanation: "wraps 将原函数名称复制给 wrapper，所以 __name__ 仍是 'test'。" }
+    ];
+    // 扩展至50题，序号51-100（共50题）
+    const extra = [
+        { text: "关于 property 的描述错误的是？", code: "", options: ["A) property 可以将方法当作属性访问", "B) 可以定义 setter 和 deleter", "C) 只能用于实例属性，不能用于类属性", "D) 可以使用 @property 装饰器"], answer: "C", explanation: "property 可以用于类属性（通常通过元类或描述符）。" },
+        { text: "下面代码输出？", code: "class C:\n    @property\n    def x(self):\n        return 1\n    @x.setter\n    def x(self, val):\n        self._x = val\nc = C()\nprint(c.x)\nc.x = 10\nprint(c._x)", options: ["A) 1\\n10", "B) 1\\n报错", "C) 报错", "D) None\\n10"], answer: "A", explanation: "getter 返回 1，setter 设置 _x。" },
+        { text: "关于 weakref 模块，说法正确的是？", code: "", options: ["A) 弱引用不增加引用计数", "B) 可用于缓存，防止对象无法被回收", "C) 常用于处理循环引用", "D) 以上都对"], answer: "D", explanation: "weakref 创建弱引用，不影响垃圾回收。" },
+        { text: "下面代码中，循环引用会导致内存泄漏吗？", code: "class A: pass\na = A()\na.b = a", options: ["A) 会，因为引用计数不为0", "B) 不会，Python 的垃圾回收器会检测循环引用", "C) 会，必须手动 del", "D) 取决于 GC 配置"], answer: "B", explanation: "Python 的循环垃圾回收器可以回收只有循环引用的对象。" },
+        { text: "关于内存管理，说法正确的是？", code: "", options: ["A) Python 使用引用计数为主，标记清除为辅", "B) 小整数和字符串会驻留", "C) del 语句立即删除对象", "D) 以上都对"], answer: "D", explanation: "Python 内存管理结合引用计数和分代回收，del 减少引用计数；小整数等驻留复用。" },
+        { text: "下面代码输出？", code: "a = [1, 2, 3]\nb = a[:]\nprint(id(a) == id(b))", options: ["A) True", "B) False", "C) 报错", "D) None"], answer: "B", explanation: "切片创建新列表，id 不同。" },
+        { text: "关于深拷贝与浅拷贝，正确的是？", code: "", options: ["A) copy.copy 是浅拷贝", "B) copy.deepcopy 会递归复制内部对象", "C) 浅拷贝只复制外层容器", "D) 以上都对"], answer: "D", explanation: "浅拷贝复制引用，深拷贝完全复制。" },
+        { text: "下面代码输出？", code: "import copy\nlst = [[1,2], [3,4]]\nlst2 = copy.copy(lst)\nlst[0][0] = 99\nprint(lst2[0][0])", options: ["A) 99", "B) 1", "C) 报错", "D) 3"], answer: "A", explanation: "浅拷贝只复制外层列表，内部列表仍是同一引用。" },
+        { text: "关于 pickle 序列化，说法错误的是？", code: "", options: ["A) 可以序列化自定义类实例", "B) 不同 Python 版本可能不兼容", "C) 序列化后的数据是安全的", "D) 支持所有 Python 对象"], answer: "C", explanation: "pickle 存在安全风险，反序列化可能执行恶意代码。" },
+        { text: "下面代码输出？", code: "import sys\na = 256\nb = 256\nc = 257\nd = 257\nprint(a is b, c is d)", options: ["A) True True", "B) True False", "C) False False", "D) False True"], answer: "B", explanation: "小整数 [-5,256] 被缓存，256 是同一对象；257 每次新建，is 为 False。" },
+        { text: "关于 __new__ 和 __init__，说法正确的是？", code: "", options: ["A) __new__ 在 __init__ 之前调用", "B) __new__ 负责创建实例，__init__ 负责初始化", "C) __new__ 是静态方法", "D) 以上都对"], answer: "D", explanation: "__new__ 返回实例，__init__ 初始化实例。" },
+        { text: "下面代码输出？", code: "class Singleton:\n    _instance = None\n    def __new__(cls):\n        if cls._instance is None:\n            cls._instance = super().__new__(cls)\n        return cls._instance\na = Singleton()\nb = Singleton()\nprint(a is b)", options: ["A) True", "B) False", "C) None", "D) 报错"], answer: "A", explanation: "单例模式保证只有一个实例。" },
+        { text: "关于 with 语句和上下文管理器的原理，正确的是？", code: "", options: ["A) 上下文管理器必须实现 __enter__ 和 __exit__", "B) with 语句自动管理资源释放", "C) contextlib.closing 用于关闭无上下文管理器接口的对象", "D) 以上都对"], answer: "D", explanation: "contextlib 提供了辅助工具。" },
+        { text: "下面代码输出？", code: "from contextlib import contextmanager\n@contextmanager\ndef managed():\n    print('enter')\n    yield\n    print('exit')\nwith managed():\n    print('inside')", options: ["A) enter\\ninside\\nexit", "B) inside\\nenter\\nexit", "C) enter\\nexit\\ninside", "D) 报错"], answer: "A", explanation: "yield 前的代码在进入时执行，yield 后的在退出时执行。" },
+        { text: "关于 __call__ 方法，说法正确的是？", code: "", options: ["A) 使对象可以像函数一样调用", "B) 定义在类中，实例调用时执行", "C) 常用于创建可调用对象", "D) 以上都对"], answer: "D", explanation: "__call__ 让实例成为可调用对象。" },
+        { text: "下面代码输出？", code: "class Call:\n    def __call__(self, x):\n        return x*x\nc = Call()\nprint(c(5))", options: ["A) 25", "B) 5", "C) 报错", "D) None"], answer: "A", explanation: "实例像函数一样调用，返回平方。" },
+        { text: "关于 logging 模块，说法错误的是？", code: "", options: ["A) 默认级别是 WARNING", "B) 可以同时输出到文件和终端", "C) getLogger() 可以分层命名", "D) 日志级别必须区分大小写"], answer: "D", explanation: "级别常量名大写，但方法接受字符串不区分大小写。" },
+        { text: "下面代码输出？", code: "import logging\nlogging.basicConfig(level=logging.INFO)\nlogging.debug('debug')", options: ["A) debug", "B) 无输出", "C) INFO", "D) 报错"], answer: "B", explanation: "DEBUG 级别低于 INFO，不会被输出。" },
+        { text: "关于 unittest.mock，正确的是？", code: "", options: ["A) patch 可以替换对象", "B) Mock 可以模拟函数返回值", "C) 常用于单元测试隔离依赖", "D) 以上都对"], answer: "D", explanation: "mock 库用于替换部分代码，隔离外部依赖。" },
+        { text: "关于 __str__ 和 __repr__，说法正确的是？", code: "", options: ["A) __str__ 供用户友好显示，__repr__ 供开发者调试", "B) str(obj) 调用 __str__，若不存在则调用 __repr__", "C) repr(obj) 调用 __repr__", "D) 以上都对"], answer: "D", explanation: "两者区别符合描述。" }
+    ];
+    // 补全至50题，使用已有题目扩充确保总数50
+    const more = [
+        { text: "下面代码输出？", code: "class A:\n    def __repr__(self):\n        return 'repr'\n    def __str__(self):\n        return 'str'\na = A()\nprint(str(a), repr(a))", options: ["A) str repr", "B) repr str", "C) str str", "D) repr repr"], answer: "A", explanation: "str 调用 __str__，repr 调用 __repr__。" },
+        { text: "关于 argparse，说法正确的是？", code: "", options: ["A) 用于解析命令行参数", "B) 可以自动生成帮助信息", "C) 支持可选参数和位置参数", "D) 以上都对"], answer: "D", explanation: "argparse 是标准库命令行解析工具。" },
+        { text: "下面代码输出？", code: "l = [1,2,3]\nprint(l[::-1])", options: ["A) [3,2,1]", "B) [1,2,3]", "C) []", "D) 报错"], answer: "A", explanation: "步长 -1 反转列表。" },
+        { text: "关于 zip 函数，说法正确的是？", code: "", options: ["A) zip 将多个可迭代对象对应打包", "B) zip 返回迭代器", "C) 最短对象决定长度", "D) 以上都对"], answer: "D", explanation: "zip 按最短长度截断。" },
+        { text: "下面代码输出？", code: "a = [1,2]\nb = [3,4]\nprint(list(zip(a,b)))", options: ["A) [(1,3),(2,4)]", "B) [[1,3],[2,4]]", "C) [(1,2),(3,4)]", "D) 报错"], answer: "A", explanation: "zip 返回元组列表。" },
+        { text: "关于 enumerate，说法正确的是？", code: "", options: ["A) 同时返回索引和元素", "B) 可以指定起始索引", "C) 返回迭代器", "D) 以上都对"], answer: "D", explanation: "enumerate 默认从 0 开始，可设置 start。" },
+        { text: "下面代码输出？", code: "for i, v in enumerate('ab', start=1):\n    print(i,v, end=' ')", options: ["A) 1 a 2 b", "B) 0 a 1 b", "C) a b", "D) 报错"], answer: "A", explanation: "enumerate 指定 start=1。" },
+        { text: "关于 all 和 any，说法错误的是？", code: "", options: ["A) all 所有元素为真返回 True", "B) any 任一元素为真返回 True", "C) 空可迭代对象 all 返回 True", "D) 空可迭代对象 any 返回 True"], answer: "D", explanation: "any([]) 返回 False。" },
+        { text: "下面代码输出？", code: "print(all([1,2,0]), any([0,False]))", options: ["A) False False", "B) True False", "C) False True", "D) True True"], answer: "A", explanation: "0 假值，all 假；any 无真值，假。" },
+        { text: "关于 map 和 filter，说法正确的是？", code: "", options: ["A) map 对每个元素应用函数", "B) filter 根据条件筛选", "C) 返回迭代器", "D) 以上都对"], answer: "D", explanation: "map/filter 返回惰性对象。" }
+    ];
+    let all = [...questions, ...extra, ...more];
+    // 确保正好50题
+    all = all.slice(0,50);
+    // 添加序号51-100
+    const container = document.getElementById('questions-container');
+    all.forEach((q, idx) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        const qNum = idx + 51;
+        let codeHtml = '';
+        if (q.code && q.code.trim() !== '') {
+            codeHtml = `<div class="code-block">${q.code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>`;
+        }
+        card.innerHTML = `
+            <div class="question-text">${qNum}. ${q.text}</div>
+            ${codeHtml}
+            <div class="options">
+                ${q.options.map(opt => `<div class="option">${opt}</div>`).join('')}
+            </div>
+            <button class="btn-reveal" data-idx="${idx}">📖 查看答案</button>
+            <div class="answer" id="answer-${idx}">
+                <strong>正确答案：${q.answer}</strong><br>
+                📘 解析：${q.explanation}
+            </div>
+        `;
+        container.appendChild(card);
+    });
+    const buttons = document.querySelectorAll('.btn-reveal');
+    buttons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const idx = btn.getAttribute('data-idx');
+            const ansDiv = document.getElementById(`answer-${idx}`);
+            ansDiv.classList.toggle('show');
+            btn.textContent = ansDiv.classList.contains('show') ? '🙈 隐藏答案' : '📖 查看答案';
+        });
+    });
+    document.getElementById('revealAll').addEventListener('click', () => {
+        for(let i=0;i<50;i++) {
+            const ansDiv = document.getElementById(`answer-${i}`);
+            if(ansDiv && !ansDiv.classList.contains('show')) {
+                ansDiv.classList.add('show');
+                const btn = document.querySelector(`.btn-reveal[data-idx="${i}"]`);
+                if(btn) btn.textContent = '🙈 隐藏答案';
+            }
+        }
+    });
+</script>
+</body>
+</html>
