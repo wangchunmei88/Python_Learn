@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Python 知识库 · 在线学习地图</title>
+    <title>知识库 · 在线学习地图</title>
     <style>
         * {
             margin: 0;
@@ -92,8 +92,8 @@
 <body>
 <div class="container">
     <div class="header">
-        <h1>🧠 AI 算法学习地图</h1>
-        <p>点击卡片直达相应笔记 · 持续更新中</p>
+        <h1 id="mainTitle">🧠 学习地图</h1>
+        <p id="subTitle">点击卡片直达相应笔记 · 持续更新中</p>
     </div>
     <div id="fileList" class="grid">
         <div class="loading">📚 正在加载学习目录...</div>
@@ -104,45 +104,103 @@
 </div>
 
 <script>
-    // 获取当前仓库的根路径（GitHub Pages 子目录）
-    const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
-    const repoFullName = window.location.pathname.split('/')[1] + '/' + window.location.pathname.split('/')[2];
+    // 动态获取 GitHub 仓库信息（支持标准 github.io 子域名及自定义域名配置）
+    function getRepoInfo() {
+        const host = window.location.hostname;
+        const path = window.location.pathname;
+        // 匹配标准 GitHub Pages 格式：用户名.github.io/仓库名/
+        const githubPagesMatch = host.match(/^([^.]+)\.github\.io$/);
+        if (githubPagesMatch) {
+            const owner = githubPagesMatch[1];
+            // 从 path 中提取仓库名（第一个非空段）
+            const parts = path.split('/').filter(p => p);
+            const repo = parts.length > 0 ? parts[0] : null;
+            return { owner, repo, isCustomDomain: false };
+        } else {
+            // 自定义域名：无法自动获取 owner/repo，回退到默认配置或提示
+            // 你可以在这里手动修改为你的仓库信息
+            console.warn('当前使用自定义域名，请手动配置 owner 和 repo');
+            // 默认回退（请根据实际情况修改）
+            return { owner: 'wangchunmei88', repo: 'AI_Knowledge_Online_test', isCustomDomain: true };
+        }
+    }
 
-    // 使用 GitHub API 获取当前仓库根目录下的所有文件
-    const apiUrl = `https://api.github.com/repos/wangchunmei88/AI_Knowledge_Online_test/contents/`;
+    // 格式化显示名称（将仓库名转换为可读标题）
+    function getTitleFromRepo(repo) {
+        if (!repo) return '学习地图';
+        // 去掉下划线、连字符，首字母大写
+        let name = repo.replace(/[_\-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        // 如果包含 knowledge 等字样，可以适当精简
+        if (name.toLowerCase().includes('knowledge')) {
+            name = name.replace(/Knowledge/i, '知识');
+        }
+        return `🧠 ${name} 学习地图`;
+    }
 
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            if (Array.isArray(data)) {
-                const htmlFiles = data.filter(file => file.name.endsWith('.html') && file.name !== 'index.html');
-                const container = document.getElementById('fileList');
-                if (htmlFiles.length === 0) {
-                    container.innerHTML = '<div style="text-align:center; color:#888;">✨ 暂时还没有找到笔记，稍后回来～</div>';
-                    return;
+    // 动态构建 API URL
+    function buildApiUrl(owner, repo) {
+        return `https://api.github.com/repos/${owner}/${repo}/contents/`;
+    }
+
+    // 获取当前页面的基础路径（用于生成文件链接）
+    function getBasePath() {
+        const path = window.location.pathname;
+        const lastSlash = path.lastIndexOf('/');
+        return path.substring(0, lastSlash + 1);
+    }
+
+    // 执行
+    (function() {
+        const repoInfo = getRepoInfo();
+        const { owner, repo, isCustomDomain } = repoInfo;
+        if (!repo) {
+            document.getElementById('fileList').innerHTML = '<div style="text-align:center; color:#c55a5a;">❌ 无法从当前URL识别仓库名，请在自定义域名时手动配置。</div>';
+            return;
+        }
+
+        // 更新页面标题和 H1
+        const titleText = getTitleFromRepo(repo);
+        document.getElementById('mainTitle').innerHTML = titleText;
+        document.title = titleText.replace(/🧠/, '').trim() + ' | 在线学习地图';
+
+        const apiUrl = buildApiUrl(owner, repo);
+        const basePath = getBasePath();
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    const htmlFiles = data.filter(file => file.name.endsWith('.html') && file.name !== 'index.html');
+                    const container = document.getElementById('fileList');
+                    if (htmlFiles.length === 0) {
+                        container.innerHTML = '<div style="text-align:center; color:#888;">✨ 暂时还没有找到笔记，稍后回来～</div>';
+                        return;
+                    }
+                    htmlFiles.sort((a,b) => a.name.localeCompare(b.name));
+                    let html = '';
+                    htmlFiles.forEach(file => {
+                        const fileName = file.name;
+                        let displayName = fileName.replace('.html', '').replace(/_/g, ' ');
+                        // 可选：进一步美化显示名
+                        displayName = displayName.replace(/^\d+/, '').replace(/[-_]/g, ' ').trim();
+                        if (displayName === '') displayName = fileName;
+                        html += `
+                            <div class="card">
+                                <a href="${basePath}${encodeURIComponent(fileName)}">📘 ${escapeHtml(displayName)}</a>
+                                <div class="file-name">${escapeHtml(fileName)}</div>
+                            </div>
+                        `;
+                    });
+                    container.innerHTML = html;
+                } else {
+                    throw new Error('API 返回格式异常');
                 }
-                // 排序：按文件名升序
-                htmlFiles.sort((a,b) => a.name.localeCompare(b.name));
-                let html = '';
-                htmlFiles.forEach(file => {
-                    const fileName = file.name;
-                    const displayName = fileName.replace('.html', '').replace(/_/g, ' ');
-                    html += `
-                        <div class="card">
-                            <a href="${basePath}${encodeURIComponent(fileName)}">📘 ${escapeHtml(displayName)}</a>
-                            <div class="file-name">${escapeHtml(fileName)}</div>
-                        </div>
-                    `;
-                });
-                container.innerHTML = html;
-            } else {
-                throw new Error('API 返回格式异常');
-            }
-        })
-        .catch(err => {
-            console.error('获取文件列表失败', err);
-            document.getElementById('fileList').innerHTML = '<div style="text-align:center; color:#c55a5a;">⚠️ 无法自动加载目录，请刷新重试或检查网络。</div>';
-        });
+            })
+            .catch(err => {
+                console.error('获取文件列表失败', err);
+                document.getElementById('fileList').innerHTML = '<div style="text-align:center; color:#c55a5a;">⚠️ 无法自动加载目录，请检查网络或仓库公开性。</div>';
+            });
+    })();
 
     function escapeHtml(str) {
         return str.replace(/[&<>]/g, function(m) {
