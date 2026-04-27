@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>知识库 · 在线学习地图</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -11,194 +12,252 @@
             box-sizing: border-box;
         }
         body {
-            background: #f6f9fc;
-            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(145deg, #f4faff 0%, #e9f2fa 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
             padding: 2rem 1rem;
-            color: #1a3e50;
+            color: #0a2b3e;
+            min-height: 100vh;
         }
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
         }
+        /* 头部区域 */
         .header {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
         }
         .header h1 {
-            font-size: 2.2rem;
-            background: linear-gradient(135deg, #1f6e8c, #2e8a99);
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            background: linear-gradient(135deg, #0f4b5e, #1e88e5, #0f4b5e);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            padding: 0 0.5rem;
         }
         .header p {
-            color: #5b8c9e;
-            margin-top: 0.5rem;
+            color: #4a6a7f;
+            font-size: 1.05rem;
+            font-weight: 500;
+            border-bottom: 2px dashed #c0dbec;
+            display: inline-block;
+            padding-bottom: 0.3rem;
         }
+        /* 装饰小元素 */
+        .header::before,
+        .header::after {
+            content: "✨";
+            position: absolute;
+            font-size: 1.2rem;
+            opacity: 0.5;
+        }
+        .header::before {
+            left: 15%;
+            top: 10%;
+        }
+        .header::after {
+            right: 15%;
+            top: 15%;
+        }
+        /* 卡片网格 */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.2rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.8rem;
         }
         .card {
-            background: white;
-            border-radius: 1.2rem;
-            padding: 1.2rem 1.2rem;
-            transition: 0.2s;
-            border: 1px solid #dce9f0;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(2px);
+            border-radius: 1.8rem;
+            padding: 1.4rem 1.5rem;
+            transition: all 0.25s ease;
+            border: 1px solid rgba(30, 136, 229, 0.2);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0,0,0,0.03);
+            cursor: pointer;
         }
         .card:hover {
-            transform: translateY(-3px);
-            border-color: #9bc4d0;
-            box-shadow: 0 12px 20px -8px rgba(0,0,0,0.08);
+            transform: translateY(-6px);
+            border-color: #1e88e5;
+            box-shadow: 0 20px 30px -12px rgba(30, 136, 229, 0.25);
+            background: white;
         }
         .card a {
             text-decoration: none;
             font-weight: 600;
-            font-size: 1.05rem;
-            color: #1f6e8c;
+            font-size: 1.1rem;
+            color: #0f4b5e;
             display: block;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.5rem;
+            transition: color 0.2s;
         }
         .card a:hover {
-            color: #0f4b5e;
-            text-decoration: underline;
+            color: #1e88e5;
+            text-decoration: none;
         }
         .card .file-name {
-            font-size: 0.75rem;
-            color: #7fa1b0;
-            word-break: break-all;
+            font-size: 0.7rem;
+            color: #6f9fbb;
+            font-family: 'Fira Code', monospace;
+            letter-spacing: -0.2px;
+            border-top: 1px solid #e2edf2;
+            padding-top: 0.6rem;
+            margin-top: 0.4rem;
+            display: inline-block;
+            width: 100%;
+        }
+        /* 加载状态与错误提示 */
+        .loading, .error-message {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(255,255,240,0.6);
+            border-radius: 2rem;
+            backdrop-filter: blur(4px);
+            color: #2c6e8a;
+            font-weight: 500;
+        }
+        .error-message {
+            color: #c2571a;
         }
         .footer {
             text-align: center;
-            margin-top: 2.5rem;
+            margin-top: 3rem;
             font-size: 0.8rem;
-            color: #8aaebd;
-            border-top: 1px solid #e2edf2;
-            padding-top: 1.2rem;
-        }
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: #2e8a99;
+            color: #6c8da3;
+            border-top: 1px solid #cde3ea;
+            padding-top: 1.5rem;
         }
         @media (max-width: 650px) {
-            .grid { grid-template-columns: 1fr; }
-            .header h1 { font-size: 1.6rem; }
+            .grid { gap: 1rem; }
+            .header h1 { font-size: 1.8rem; }
+            .card { padding: 1rem; }
+        }
+        /* 动态计数小徽章（可选） */
+        .stats-badge {
+            background: #e0f0f5;
+            color: #1f6e8c;
+            border-radius: 40px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 0.5rem;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <h1 id="mainTitle">🧠 学习地图</h1>
-        <p id="subTitle">点击卡片直达相应笔记 · 持续更新中</p>
+        <h1 id="mainTitle">📘 学习地图</h1>
+        <p id="subTitle">点击卡片直达笔记 · 知识常新</p>
     </div>
     <div id="fileList" class="grid">
-        <div class="loading">📚 正在加载学习目录...</div>
+        <div class="loading">📚 正在加载学习目录，请稍候...</div>
     </div>
     <div class="footer">
-        📌 本页面自动列出仓库中所有 .html 文件 | 由 GitHub Pages 托管
+        🌟 本页面动态拉取仓库中的 HTML 笔记 | 由 GitHub Pages 驱动
     </div>
 </div>
 
 <script>
-    // 动态获取 GitHub 仓库信息（支持标准 github.io 子域名及自定义域名配置）
+    // 辅助函数：从当前 URL 解析 GitHub 仓库信息
     function getRepoInfo() {
         const host = window.location.hostname;
         const path = window.location.pathname;
-        // 匹配标准 GitHub Pages 格式：用户名.github.io/仓库名/
         const githubPagesMatch = host.match(/^([^.]+)\.github\.io$/);
         if (githubPagesMatch) {
             const owner = githubPagesMatch[1];
-            // 从 path 中提取仓库名（第一个非空段）
             const parts = path.split('/').filter(p => p);
             const repo = parts.length > 0 ? parts[0] : null;
             return { owner, repo, isCustomDomain: false };
         } else {
-            // 自定义域名：无法自动获取 owner/repo，回退到默认配置或提示
-            // 你可以在这里手动修改为你的仓库信息
-            console.warn('当前使用自定义域名，请手动配置 owner 和 repo');
-            // 默认回退（请根据实际情况修改）
+            // 自定义域名：请根据实际情况修改下面的默认值
+            console.warn('当前使用自定义域名或非标准格式，使用默认仓库配置');
             return { owner: 'wangchunmei88', repo: 'AI_Knowledge_Online_test', isCustomDomain: true };
         }
     }
 
-    // 格式化显示名称（将仓库名转换为可读标题）
-    function getTitleFromRepo(repo) {
-        if (!repo) return '学习地图';
-        // 去掉下划线、连字符，首字母大写
+    // 格式化显示标题
+    function formatTitleFromRepo(repo) {
+        if (!repo) return '知识库';
         let name = repo.replace(/[_\-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-        // 如果包含 knowledge 等字样，可以适当精简
-        if (name.toLowerCase().includes('knowledge')) {
-            name = name.replace(/Knowledge/i, '知识');
-        }
-        return `🧠 ${name} 学习地图`;
+        if (name.toLowerCase().includes('knowledge')) name = name.replace(/Knowledge/i, '知识');
+        return `📖 ${name} 学习地图`;
     }
 
-    // 动态构建 API URL
-    function buildApiUrl(owner, repo) {
-        return `https://api.github.com/repos/${owner}/${repo}/contents/`;
-    }
-
-    // 获取当前页面的基础路径（用于生成文件链接）
+    // 获取基础路径（用于文件链接）
     function getBasePath() {
         const path = window.location.pathname;
         const lastSlash = path.lastIndexOf('/');
         return path.substring(0, lastSlash + 1);
     }
 
-    // 执行
-    (function() {
+    // 构建 API URL
+    function buildApiUrl(owner, repo) {
+        return `https://api.github.com/repos/${owner}/${repo}/contents/`;
+    }
+
+    (function init() {
         const repoInfo = getRepoInfo();
-        const { owner, repo, isCustomDomain } = repoInfo;
+        const { owner, repo } = repoInfo;
         if (!repo) {
-            document.getElementById('fileList').innerHTML = '<div style="text-align:center; color:#c55a5a;">❌ 无法从当前URL识别仓库名，请在自定义域名时手动配置。</div>';
+            const container = document.getElementById('fileList');
+            container.innerHTML = '<div class="error-message">⚠️ 无法识别仓库名，请在自定义域名时修改代码中的默认仓库配置。</div>';
             return;
         }
 
-        // 更新页面标题和 H1
-        const titleText = getTitleFromRepo(repo);
-        document.getElementById('mainTitle').innerHTML = titleText;
-        document.title = titleText.replace(/🧠/, '').trim() + ' | 在线学习地图';
+        // 更新标题
+        const titleStr = formatTitleFromRepo(repo);
+        document.getElementById('mainTitle').innerHTML = titleStr;
+        document.title = titleStr.replace(/[📖🧠]/g, '').trim() + ' | 在线学习地图';
 
         const apiUrl = buildApiUrl(owner, repo);
         const basePath = getBasePath();
 
         fetch(apiUrl)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return response.json();
+            })
             .then(data => {
-                if (Array.isArray(data)) {
-                    const htmlFiles = data.filter(file => file.name.endsWith('.html') && file.name !== 'index.html');
-                    const container = document.getElementById('fileList');
-                    if (htmlFiles.length === 0) {
-                        container.innerHTML = '<div style="text-align:center; color:#888;">✨ 暂时还没有找到笔记，稍后回来～</div>';
-                        return;
-                    }
-                    htmlFiles.sort((a,b) => a.name.localeCompare(b.name));
-                    let html = '';
-                    htmlFiles.forEach(file => {
-                        const fileName = file.name;
-                        let displayName = fileName.replace('.html', '').replace(/_/g, ' ');
-                        // 可选：进一步美化显示名
-                        displayName = displayName.replace(/^\d+/, '').replace(/[-_]/g, ' ').trim();
-                        if (displayName === '') displayName = fileName;
-                        html += `
-                            <div class="card">
-                                <a href="${basePath}${encodeURIComponent(fileName)}">📘 ${escapeHtml(displayName)}</a>
-                                <div class="file-name">${escapeHtml(fileName)}</div>
-                            </div>
-                        `;
-                    });
-                    container.innerHTML = html;
-                } else {
-                    throw new Error('API 返回格式异常');
+                if (!Array.isArray(data)) throw new Error('API 返回非数组');
+                const htmlFiles = data.filter(file => file.name && file.name.endsWith('.html') && file.name !== 'index.html');
+                const container = document.getElementById('fileList');
+                if (htmlFiles.length === 0) {
+                    container.innerHTML = '<div class="loading">✨ 暂时还没有 HTML 笔记，上传一些吧～</div>';
+                    return;
                 }
+                // 排序
+                htmlFiles.sort((a, b) => a.name.localeCompare(b.name));
+                let html = '';
+                htmlFiles.forEach(file => {
+                    let fileName = file.name;
+                    let displayName = fileName.replace('.html', '').replace(/[_\-]/g, ' ');
+                    // 移除开头的数字编号（可选）
+                    displayName = displayName.replace(/^\d+/, '').replace(/^[\s_-]+/, '');
+                    if (displayName === '') displayName = fileName;
+                    html += `
+                        <div class="card">
+                            <a href="${basePath}${encodeURIComponent(fileName)}">📘 ${escapeHtml(displayName)}</a>
+                            <div class="file-name">📄 ${escapeHtml(fileName)}</div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+                // 可选：在头部添加资源计数
+                const counterSpan = document.createElement('span');
+                counterSpan.className = 'stats-badge';
+                counterSpan.innerText = `共 ${htmlFiles.length} 篇笔记`;
+                document.querySelector('.header').appendChild(counterSpan);
             })
             .catch(err => {
-                console.error('获取文件列表失败', err);
-                document.getElementById('fileList').innerHTML = '<div style="text-align:center; color:#c55a5a;">⚠️ 无法自动加载目录，请检查网络或仓库公开性。</div>';
+                console.error('加载失败：', err);
+                const container = document.getElementById('fileList');
+                container.innerHTML = '<div class="error-message">⚠️ 加载失败，请检查网络或仓库是否公开。' + (repoInfo.isCustomDomain ? '<br>如使用自定义域名，请确认仓库名配置正确。' : '') + '</div>';
             });
     })();
 
