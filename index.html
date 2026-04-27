@@ -127,25 +127,24 @@
         <div class="loading">📚 正在加载学习目录，请稍候...</div>
     </div>
     <div class="footer">
-        🌟 本页面动态拉取仓库中的 HTML 笔记 | 由 GitHub Pages 驱动
+        📚 积跬步，至千里；每一份笔记都是未来的基石。
     </div>
 </div>
 
 <script>
-    // 主题图标映射：根据仓库名关键词返回对应图标（可自由扩展）
+    // 主题图标映射（已移除蛇图像）
     function getTopicIcon(repoName) {
         const lower = repoName.toLowerCase();
-        if (lower.includes('python') || lower.includes('蛇')) return '🐍';
         if (lower.includes('ai') || lower.includes('llm') || lower.includes('gpt')) return '🧠';
         if (lower.includes('java')) return '☕';
         if (lower.includes('javascript') || lower.includes('js')) return '📜';
         if (lower.includes('vue') || lower.includes('react')) return '⚛️';
         if (lower.includes('ml') || lower.includes('machine')) return '🤖';
         if (lower.includes('cloud') || lower.includes('devops')) return '☁️';
-        return '📚';      // 默认图标
+        return '📚';      // 默认图标（包括 Python 等使用此图标）
     }
 
-    // 预置一套柔和的背景色数组（HSL饱和度低，亮度高，文字仍清晰）
+    // 预置柔和背景色数组
     const colorPalette = [
         'linear-gradient(135deg, #fef9e6 0%, #fff6e0 100%)',
         'linear-gradient(135deg, #e8f5e9 0%, #e0f2f1 100%)',
@@ -159,14 +158,11 @@
         'linear-gradient(135deg, #b2dfdb 0%, #c8e6e0 100%)'
     ];
 
-    // 根据索引循环取色（保证每个卡片颜色不同）
     function getCardStyle(index) {
         const bg = colorPalette[index % colorPalette.length];
-        // 可选随索引轻微改变边框色
         return `background: ${bg};`;
     }
 
-    // 其他辅助函数
     function getRepoInfo() {
         const host = window.location.hostname;
         const path = window.location.pathname;
@@ -234,7 +230,6 @@
                         displayName = displayName.replace(/^\d+/, '').replace(/^[\s_-]+/, '');
                         if (displayName === '') displayName = fileName;
                         const cardStyle = getCardStyle(idx);
-                        // 增加一个轻微的内阴影或者不附加额外阴影，保持清爽
                         html += `
                             <div class="card" style="${cardStyle}">
                                 <a href="${basePath}${encodeURIComponent(fileName)}">📘 ${escapeHtml(displayName)}</a>
