@@ -63,20 +63,19 @@
             gap: 1.8rem;
         }
         .card {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(2px);
             border-radius: 1.8rem;
             padding: 1.4rem 1.5rem;
             transition: all 0.25s ease;
             border: 1px solid rgba(30, 136, 229, 0.2);
             box-shadow: 0 8px 18px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0,0,0,0.03);
             cursor: pointer;
+            backdrop-filter: blur(2px);
         }
         .card:hover {
             transform: translateY(-6px);
             border-color: #1e88e5;
-            box-shadow: 0 20px 30px -12px rgba(30, 136, 229, 0.25);
-            background: white;
+            box-shadow: 0 20px 30px -12px rgba(30, 136, 229, 0.3);
+            background: rgba(255,255,255,0.96) !important;
         }
         .card a {
             text-decoration: none;
@@ -90,7 +89,6 @@
             color: #1e88e5;
             text-decoration: none;
         }
-        /* 不再显示文件名 */
         .loading, .error-message {
             text-align: center;
             padding: 3rem;
@@ -134,6 +132,41 @@
 </div>
 
 <script>
+    // 主题图标映射：根据仓库名关键词返回对应图标（可自由扩展）
+    function getTopicIcon(repoName) {
+        const lower = repoName.toLowerCase();
+        if (lower.includes('python') || lower.includes('蛇')) return '🐍';
+        if (lower.includes('ai') || lower.includes('llm') || lower.includes('gpt')) return '🧠';
+        if (lower.includes('java')) return '☕';
+        if (lower.includes('javascript') || lower.includes('js')) return '📜';
+        if (lower.includes('vue') || lower.includes('react')) return '⚛️';
+        if (lower.includes('ml') || lower.includes('machine')) return '🤖';
+        if (lower.includes('cloud') || lower.includes('devops')) return '☁️';
+        return '📚';      // 默认图标
+    }
+
+    // 预置一套柔和的背景色数组（HSL饱和度低，亮度高，文字仍清晰）
+    const colorPalette = [
+        'linear-gradient(135deg, #fef9e6 0%, #fff6e0 100%)',
+        'linear-gradient(135deg, #e8f5e9 0%, #e0f2f1 100%)',
+        'linear-gradient(135deg, #fff3e0 0%, #fff8e7 100%)',
+        'linear-gradient(135deg, #e0f7fa 0%, #e1f5fe 100%)',
+        'linear-gradient(135deg, #f3e5f5 0%, #f1eef6 100%)',
+        'linear-gradient(135deg, #ffebee 0%, #ffe6e8 100%)',
+        'linear-gradient(135deg, #e8eaf6 0%, #e3e8fa 100%)',
+        'linear-gradient(135deg, #fff9c4 0%, #fff9e0 100%)',
+        'linear-gradient(135deg, #d1c4e9 0%, #e8def8 100%)',
+        'linear-gradient(135deg, #b2dfdb 0%, #c8e6e0 100%)'
+    ];
+
+    // 根据索引循环取色（保证每个卡片颜色不同）
+    function getCardStyle(index) {
+        const bg = colorPalette[index % colorPalette.length];
+        // 可选随索引轻微改变边框色
+        return `background: ${bg};`;
+    }
+
+    // 其他辅助函数
     function getRepoInfo() {
         const host = window.location.hostname;
         const path = window.location.pathname;
@@ -153,7 +186,8 @@
         if (!repo) return '知识库';
         let name = repo.replace(/[_\-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
         if (name.toLowerCase().includes('knowledge')) name = name.replace(/Knowledge/i, '知识');
-        return `📖 ${name} 学习地图`;
+        const icon = getTopicIcon(repo);
+        return `${icon} ${name} 学习地图`;
     }
 
     function getBasePath() {
@@ -175,7 +209,7 @@
         }
 
         document.getElementById('mainTitle').innerHTML = formatTitleFromRepo(repo);
-        document.title = formatTitleFromRepo(repo).replace(/[📖🧠]/g, '').trim() + ' | 在线学习地图';
+        document.title = formatTitleFromRepo(repo).replace(/[^a-zA-Z\u4e00-\u9fa5]/g, '').trim() + ' | 在线学习地图';
 
         const apiUrl = buildApiUrl(owner, repo);
         const basePath = getBasePath();
@@ -194,13 +228,15 @@
                 } else {
                     htmlFiles.sort((a, b) => a.name.localeCompare(b.name));
                     let html = '';
-                    htmlFiles.forEach(file => {
+                    htmlFiles.forEach((file, idx) => {
                         let fileName = file.name;
                         let displayName = fileName.replace('.html', '').replace(/[_\-]/g, ' ');
                         displayName = displayName.replace(/^\d+/, '').replace(/^[\s_-]+/, '');
                         if (displayName === '') displayName = fileName;
+                        const cardStyle = getCardStyle(idx);
+                        // 增加一个轻微的内阴影或者不附加额外阴影，保持清爽
                         html += `
-                            <div class="card">
+                            <div class="card" style="${cardStyle}">
                                 <a href="${basePath}${encodeURIComponent(fileName)}">📘 ${escapeHtml(displayName)}</a>
                             </div>
                         `;
