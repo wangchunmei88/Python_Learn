@@ -27,6 +27,21 @@
             margin-bottom: 3rem;
             position: relative;
         }
+        .title-wrapper {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+        .title-icon {
+            font-size: 2.5rem;
+            line-height: 1;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+            color: inherit;
+        }
         .header h1 {
             font-size: 2.5rem;
             font-weight: 700;
@@ -35,7 +50,7 @@
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
-            margin-bottom: 0.6rem;
+            margin: 0;
             display: inline-block;
             padding: 0 0.5rem;
         }
@@ -104,7 +119,7 @@
         .footer {
             text-align: center;
             margin-top: 3rem;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: #6c8da3;
             border-top: 1px solid #cde3ea;
             padding-top: 1.5rem;
@@ -112,6 +127,7 @@
         @media (max-width: 650px) {
             .grid { gap: 1rem; }
             .header h1 { font-size: 1.8rem; }
+            .title-icon { font-size: 1.9rem; }
             .card { padding: 1rem; }
         }
     </style>
@@ -119,7 +135,10 @@
 <body>
 <div class="container">
     <div class="header">
-        <h1 id="mainTitle">📘 学习地图</h1>
+        <div class="title-wrapper">
+            <span class="title-icon" id="titleIcon">📘</span>
+            <h1 id="mainTitle">学习地图</h1>
+        </div>
         <div class="sub" id="subTitle">点击卡片直达笔记 · 知识常新</div>
         <div id="statsContainer"></div>
     </div>
@@ -141,10 +160,16 @@
         if (lower.includes('vue') || lower.includes('react')) return '⚛️';
         if (lower.includes('ml') || lower.includes('machine')) return '🤖';
         if (lower.includes('cloud') || lower.includes('devops')) return '☁️';
-        return '📚';      // 默认图标（包括 Python 等使用此图标）
+        return '📚';
     }
 
-    // 预置柔和背景色数组
+    function formatTitleText(repo) {
+        if (!repo) return '学习地图';
+        let name = repo.replace(/[_\-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        if (name.toLowerCase().includes('knowledge')) name = name.replace(/Knowledge/i, '知识');
+        return `${name} 学习地图`;
+    }
+
     const colorPalette = [
         'linear-gradient(135deg, #fef9e6 0%, #fff6e0 100%)',
         'linear-gradient(135deg, #e8f5e9 0%, #e0f2f1 100%)',
@@ -159,8 +184,7 @@
     ];
 
     function getCardStyle(index) {
-        const bg = colorPalette[index % colorPalette.length];
-        return `background: ${bg};`;
+        return `background: ${colorPalette[index % colorPalette.length]};`;
     }
 
     function getRepoInfo() {
@@ -173,17 +197,9 @@
             const repo = parts.length > 0 ? parts[0] : null;
             return { owner, repo, isCustomDomain: false };
         } else {
-            console.warn('当前使用自定义域名或非标准格式，使用默认仓库配置');
+            console.warn('使用默认仓库配置');
             return { owner: 'wangchunmei88', repo: 'AI_Knowledge_Online_test', isCustomDomain: true };
         }
-    }
-
-    function formatTitleFromRepo(repo) {
-        if (!repo) return '知识库';
-        let name = repo.replace(/[_\-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-        if (name.toLowerCase().includes('knowledge')) name = name.replace(/Knowledge/i, '知识');
-        const icon = getTopicIcon(repo);
-        return `${icon} ${name} 学习地图`;
     }
 
     function getBasePath() {
@@ -200,12 +216,16 @@
         const repoInfo = getRepoInfo();
         const { owner, repo } = repoInfo;
         if (!repo) {
-            document.getElementById('fileList').innerHTML = '<div class="error-message">⚠️ 无法识别仓库名，请在自定义域名时修改代码中的默认仓库配置。</div>';
+            document.getElementById('fileList').innerHTML = '<div class="error-message">⚠️ 无法识别仓库名。</div>';
             return;
         }
 
-        document.getElementById('mainTitle').innerHTML = formatTitleFromRepo(repo);
-        document.title = formatTitleFromRepo(repo).replace(/[^a-zA-Z\u4e00-\u9fa5]/g, '').trim() + ' | 在线学习地图';
+        // 设置标题图标和文字
+        const icon = getTopicIcon(repo);
+        const titleText = formatTitleText(repo);
+        document.getElementById('titleIcon').textContent = icon;
+        document.getElementById('mainTitle').textContent = titleText;
+        document.title = titleText.replace(/📖/g, '').trim() + ' | 在线学习地图';
 
         const apiUrl = buildApiUrl(owner, repo);
         const basePath = getBasePath();
@@ -241,8 +261,8 @@
                 document.getElementById('statsContainer').innerHTML = `<div class="stats-badge">📚 共 ${htmlFiles.length} 篇笔记</div>`;
             })
             .catch(err => {
-                console.error('加载失败：', err);
-                document.getElementById('fileList').innerHTML = '<div class="error-message">⚠️ 加载失败，请检查网络或仓库是否公开。' + (repoInfo.isCustomDomain ? '<br>如使用自定义域名，请确认仓库名配置正确。' : '') + '</div>';
+                console.error(err);
+                document.getElementById('fileList').innerHTML = '<div class="error-message">⚠️ 加载失败，请刷新或检查网络。</div>';
             });
     })();
 
