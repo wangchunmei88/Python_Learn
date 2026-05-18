@@ -150,7 +150,7 @@
         { text: "下面代码将输出什么？", code: "a = [1,2,3]\nb = a\nb.append(4)\nprint(a)", options: ["A) [1,2,3]", "B) [1,2,3,4]", "C) [1,2,3,5]", "D) 报错"], answer: "B", explanation: "b = a 指向同一列表，通过 b 修改会影响 a。" },
         { text: "下列代码的输出是？", code: "print(type([1,2]) == type((1,2)))", options: ["A) True", "B) False", "C) 报错", "D) None"], answer: "B", explanation: "type([1,2]) 是 list，type((1,2)) 是 tuple，两者不同。" },
         { text: "关于字典，下面哪个正确？", code: "d = {'a':1, 'b':2}\nprint(d.get('c', 0))", options: ["A) 报错", "B) None", "C) 0", "D) KeyError"], answer: "C", explanation: "get() 方法若键不存在返回默认值 0。" },
-        { text: "以下代码输出？", code: "x = 'hello'\nprint(x.upper()[0])", options: ["A) 'h'", "B) 'H'", "C) 'HELLO'", "D) 报错"], answer: "B", explanation: "upper() 变成 'HELLO'，取第一个字符 'H'。" },
+        { text: "以下代码输出？", code: "x = 'hello'\nprint(x.upper()[0])", options: ["A) h", "B) H", "C) HELLO", "D) 报错"], answer: "B", explanation: "upper() 变成 'HELLO'，取第一个字符 'H'。" },
         { text: "下列哪个表达式结果为 True？", code: "", options: ["A) 3 == '3'", "B) 3 is 3", "C) 3 == 3.0", "D) '3' == 3"], answer: "C", explanation: "== 比较值，3 和 3.0 值相等；is 比较身份但整数小池可能一样但不可依赖；字符串和数字类型不同值不同。" },
         { text: "执行下面代码，输出是什么？", code: "def func(a, b=[]):\n    b.append(a)\n    return b\nprint(func(1))\nprint(func(2,[]))\nprint(func(3))", options: ["A) [1] [2] [3]", "B) [1] [2] [1,3]", "C) [1] [2] [1]", "D) [1] [2] [1,2]"], answer: "B", explanation: "默认参数 [] 只在定义时创建一次，第一次调用后默认值变为 [1]，第三次调用未传新列表，使用相同的可变默认值，追加 3 得到 [1,3]。" },
         { text: "列表推导式的结果是？", code: "[x**2 for x in range(3)]", options: ["A) [0,1,4]", "B) [1,4,9]", "C) [0,1,2]", "D) 报错"], answer: "A", explanation: "range(3) 产生 0,1,2，平方后 [0,1,4]。" },
