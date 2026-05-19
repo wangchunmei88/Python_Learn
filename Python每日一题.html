@@ -166,7 +166,7 @@
         { text: "下面代码输出？", code: "a = 'Python'\nprint(a[::-1])", options: ["A) Python", "B) nohtyP", "C) Pytho", "D) 报错"], answer: "B", explanation: "步长为 -1 反转字符串，得到 'nohtyP'。" },
         { text: "下列哪个是创建只读属性的正确方式？", code: "", options: ["A) @property", "B) @staticmethod", "C) @classmethod", "D) @abstractmethod"], answer: "A", explanation: "@property 可以将方法变成属性，只读。" },
         { text: "关于迭代器，下面哪个正确？", code: "", options: ["A) 所有可迭代对象都是迭代器", "B) 迭代器只能迭代一次", "C) 列表是迭代器", "D) 生成器不是迭代器"], answer: "B", explanation: "迭代器可以消耗；可迭代对象不一定是迭代器；列表不是迭代器；生成器是迭代器。" },
-        { text: "下面代码输出？", code: "print(sum([1,2,3], 10))", options: ["A) 16", "B) 6", "C) 10", "D) 报错"], answer: "A", explanation: "sum(iterable, start) 从 start 开始累加，10+1+2+3=16。" },
+        { text: "下面代码输出？", code: "print(sum([1,2,3], 10))", options: ["A) 16", "B) 6", "C) 10", "D) 报错"], answer: "A", explanation: "sum(iterable, start) 其中 start 是初始值（不写默认为0），所以10+1+2+3=16。" },
         { text: "以下代码输出？", code: "x = 'hello'\ny = x.replace('l','x')\nprint(y)", options: ["A) hexxo", "B) hexxo", "C) hexxo", "D) hello"], answer: "A", explanation: "replace('l','x') 将所有 l 替换为 x，得到 'hexxo'。" },
         { text: "执行下列代码，输出？", code: "i = 0\nwhile i < 3:\n    i += 1\nelse:\n    i = 10\nprint(i)", options: ["A) 3", "B) 10", "C) 4", "D) 6"], answer: "B", explanation: "while-else 在循环正常结束后执行 else，i 最终变为 10。" },
         { text: "下面哪个表达式会报错？", code: "", options: ["A) 1/0", "B) int('12.3')", "C) float('12.3')", "D) 'a'*3"], answer: "B", explanation: "int('12.3') 会引发 ValueError，因为点不是有效整数格式。" },
